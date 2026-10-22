@@ -94,7 +94,7 @@
     .primary-button:hover:not(:disabled) { background: var(--navy-dark); }
     .primary-button:disabled { cursor: not-allowed; opacity: .48; }
     .search-form {
-      display: grid; grid-template-columns: 1fr 1fr 1fr 130px; gap: 13px; margin: 0 0 28px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr 130px 160px; gap: 13px; margin: 0 0 28px;
       padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: white;
     }
     .field { display: grid; gap: 7px; }
@@ -113,6 +113,7 @@
     .legend-swatch.selected { background: var(--navy); box-shadow: 0 3px 0 #112341; }
     .legend-swatch.taken { background: #c8cbd0; box-shadow: 0 3px 0 #aeb2b9; }
     .bus-shell { position: relative; width: min(100%, 460px); padding: 46px 22px 26px; border: 3px solid #dfe1e6; border-radius: 20px 20px 0 0; background: white; }
+    .fare-note { margin: -9px 0 22px; color: var(--muted); font-size: 13px; line-height: 1.5; }
     .bus-shell::before { content: ""; position: absolute; top: -32px; left: 8%; width: 84%; height: 42px; border-radius: 65px 65px 0 0; background: #e6e8ed; box-shadow: inset 0 -9px 14px #d4d7de; z-index: -1; }
     .bus-front { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px dashed #d5d8de; color: #697386; font-size: 12px; text-transform: uppercase; }
     .driver { display: grid; place-items: center; width: 50px; height: 50px; border: 2px solid #e2e4e9; border-radius: 50%; background: #f5f6f8; font-size: 11px; }
@@ -208,21 +209,76 @@
   <script>
     const contactNumber = "254105686866";
     const contactEmail = "infosimbacoachbus@gmail.com";
-    const buses = [
-      { id: "nrb-dar-8pm-vip", className: "VIP", time: "08:00 PM", price: 5000, left: 12, amenities: ["2+1 seating", "Extra legroom", "USB charging", "Refreshments"], taken: [2, 3, 5, 12, 14, 15, 16, 17, 18, 19, 21, 23] },
-      { id: "nrb-dar-10pm-standard", className: "Standard", time: "10:00 PM", price: 3500, left: 9, amenities: ["2+3 seating", "Comfortable seats", "Affordable"], taken: [2, 5, 12, 14, 17, 19, 22, 26, 28] }
+    const destinations = [
+      ["Baringo", "Kabarnet", 0.48, 35.74], ["Bomet", "Bomet", -0.78, 35.34],
+      ["Bungoma", "Bungoma", 0.57, 34.56], ["Busia", "Busia", 0.46, 34.11],
+      ["Elgeyo-Marakwet", "Iten", 0.67, 35.51], ["Embu", "Embu", -0.54, 37.45],
+      ["Garissa", "Garissa", -0.45, 39.65], ["Homa Bay", "Homa Bay", -0.53, 34.46],
+      ["Isiolo", "Isiolo", 0.35, 37.58], ["Kajiado", "Kajiado", -1.85, 36.78],
+      ["Kakamega", "Kakamega", 0.28, 34.75], ["Kericho", "Kericho", -0.37, 35.28],
+      ["Kiambu", "Kiambu", -1.17, 36.83], ["Kilifi", "Kilifi", -3.63, 39.85],
+      ["Kirinyaga", "Kerugoya", -0.50, 37.28], ["Kisii", "Kisii", -0.68, 34.77],
+      ["Kisumu", "Kisumu", -0.10, 34.76], ["Kitui", "Kitui", -1.37, 38.01],
+      ["Kwale", "Kwale", -4.18, 39.45], ["Laikipia", "Rumuruti", 0.27, 36.54],
+      ["Lamu", "Mokowe", -2.28, 40.90], ["Machakos", "Machakos", -1.52, 37.26],
+      ["Makueni", "Wote", -1.78, 37.63], ["Mandera", "Mandera", 3.94, 41.86],
+      ["Marsabit", "Marsabit", 2.33, 37.99], ["Meru", "Meru", 0.05, 37.65],
+      ["Migori", "Migori", -1.06, 34.47], ["Mombasa", "Mombasa", -4.04, 39.66],
+      ["Murang'a", "Murang'a", -0.72, 37.15], ["Nairobi", "Nairobi", -1.29, 36.82],
+      ["Nakuru", "Nakuru", -0.30, 36.08], ["Nandi", "Kapsabet", 0.20, 35.10],
+      ["Narok", "Narok", -1.08, 35.87], ["Nyamira", "Nyamira", -0.56, 34.93],
+      ["Nyandarua", "Ol Kalou", -0.27, 36.38], ["Nyeri", "Nyeri", -0.42, 36.95],
+      ["Samburu", "Maralal", 1.10, 36.70], ["Siaya", "Siaya", 0.06, 34.29],
+      ["Taita-Taveta", "Mwatate", -3.51, 38.38], ["Tana River", "Hola", -1.50, 40.03],
+      ["Tharaka-Nithi", "Kathwana", -0.33, 37.86], ["Trans-Nzoia", "Kitale", 1.02, 35.00],
+      ["Turkana", "Lodwar", 3.12, 35.60], ["Uasin Gishu", "Eldoret", 0.52, 35.27],
+      ["Vihiga", "Mbale", 0.08, 34.72], ["Wajir", "Wajir", 1.75, 40.06],
+      ["West Pokot", "Kapenguria", 1.24, 35.11]
     ];
+    const legacyDestination = ["Dar es Salaam", -6.16, 39.20];
+    const vehicleOptions = [
+      { mode: "Bus", className: "VIP", time: "08:00 PM", multiplier: 1.55, seats: 36, amenities: ["2+1 seating", "Extra legroom", "USB charging", "Refreshments"] },
+      { mode: "Bus", className: "Executive", time: "09:00 PM", multiplier: 1.35, seats: 36, amenities: ["2+2 seating", "Reclining seats", "USB charging"] },
+      { mode: "Bus", className: "Standard", time: "10:00 PM", multiplier: 1.15, seats: 40, amenities: ["2+2 seating", "Comfortable seats", "Luggage space"] },
+      { mode: "Bus", className: "Standard", time: "06:00 AM", multiplier: 1, seats: 40, amenities: ["2+2 seating", "Luggage space", "Day travel"] },
+      { mode: "Matatu", className: "Matatu", time: "06:00 AM", multiplier: 0.92, seats: 14, amenities: ["14-seater", "Day service", "Luggage space"] },
+      { mode: "Matatu", className: "Matatu", time: "08:00 AM", multiplier: 1, seats: 14, amenities: ["14-seater", "Day service", "Luggage space"] },
+      { mode: "Matatu", className: "Matatu", time: "10:00 AM", multiplier: 1.04, seats: 14, amenities: ["14-seater", "Day service", "Luggage space"] },
+      { mode: "Matatu", className: "Matatu", time: "02:00 PM", multiplier: 0.96, seats: 14, amenities: ["14-seater", "Afternoon service", "Luggage space"] }
+    ];
+    const allVehicles = (from, to) => {
+      const fromPoint = destinations.find(item => item[1] === from) || destinations.find(item => item[0] === from) || destinations[29];
+      const knownDestination = destinations.find(item => item[1] === to) || destinations.find(item => item[0] === to);
+      const endPoint = knownDestination || (to === legacyDestination[0] ? legacyDestination : [to, -6.16, 39.20]);
+      const radians = degrees => degrees * Math.PI / 180;
+      const latDistance = radians(endPoint[2] - fromPoint[2]);
+      const lonDistance = radians(endPoint[3] - fromPoint[3]);
+      const arc = Math.sin(latDistance / 2) ** 2 + Math.cos(radians(fromPoint[2])) * Math.cos(radians(endPoint[2])) * Math.sin(lonDistance / 2) ** 2;
+      const roadKm = Math.max(35, Math.round(6371 * 2 * Math.atan2(Math.sqrt(arc), Math.sqrt(1 - arc)) * 1.35));
+      const baseEstimate = roadKm * 4.8 + 400;
+      const idBase = `${fromPoint[1]}-${endPoint[1]}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      return vehicleOptions.map((option, index) => {
+        const price = Math.max(100, Math.round((baseEstimate * option.multiplier - 400) / 50) * 50);
+        const taken = Array.from({ length: Math.floor(option.seats * 0.22) }, (_, i) => ((index * 3 + i * 5) % option.seats) + 1);
+        return {
+          ...option, id: `${idBase}-${index + 1}`, price, left: option.seats - taken.length, taken,
+          hours: Math.max(1, Math.round(roadKm / (option.mode === "Bus" ? 55 : 48)))
+        };
+      });
+    };
     const params = new URLSearchParams(location.search);
     const currentParams = () => new URLSearchParams(location.search);
     const app = document.querySelector("#app");
+    const initialFrom = params.get("from") || "Nairobi";
+    const initialTo = params.get("to") || "Mombasa";
     const state = {
-      from: params.get("from") || "Nairobi",
-      to: params.get("to") || "Dar es Salaam",
+      from: initialFrom,
+      to: initialTo,
       date: params.get("date") || "2026-10-22",
       pax: Math.max(1, Number(params.get("pax") || 1)),
-      filter: "All Classes",
+      filter: "All Vehicles",
       selectedSeats: (params.get("seats") || "").split(",").filter(Boolean).map(Number),
-      bookingBus: buses.find(bus => bus.id === params.get("schedule")) || buses[0]
+      bookingBus: allVehicles(initialFrom, initialTo).find(bus => bus.id === params.get("schedule")) || allVehicles(initialFrom, initialTo)[0]
     };
     const stepFromLocation = () => {
       const query = currentParams();
@@ -249,6 +305,12 @@
       return `${location.pathname}?${query}`;
     };
     const pushRoute = (step, extra) => { history.pushState({}, "", routeUrl(step, extra)); render(); window.scrollTo(0, 0); };
+    const routeOptions = selected => {
+      const options = destinations.map(([, city]) => `<option value="${escapeHtml(city)}" ${city === selected ? "selected" : ""}>${escapeHtml(city)}</option>`);
+      if (!destinations.some(([, city]) => city === selected)) options.push(`<option value="${escapeHtml(selected)}" selected>${escapeHtml(selected)} (outside Kenya)</option>`);
+      return options.join("");
+    };
+    const tripDuration = hours => `${hours}–${hours + 2} hrs`;
     const routeBanner = (title, subtitle, backLabel = "Back") => `
       <section class="route-banner">
         <button class="back-button" data-action="back" type="button"><span aria-hidden="true">←</span>${backLabel}</button>
@@ -264,8 +326,8 @@
         </section>
         <main>
           <form class="search-form" id="search-form">
-            <div class="field"><label for="from">From</label><input id="from" name="from" value="${escapeHtml(state.from)}" required></div>
-            <div class="field"><label for="to">To</label><input id="to" name="to" value="${escapeHtml(state.to)}" required></div>
+            <div class="field"><label for="from">From</label><select id="from" name="from" required>${routeOptions(state.from)}</select></div>
+            <div class="field"><label for="to">To</label><select id="to" name="to" required>${routeOptions(state.to)}</select></div>
             <div class="field"><label for="date">Travel date</label><input id="date" name="date" type="date" value="${escapeHtml(state.date)}" required></div>
             <div class="field"><label for="pax">Passengers</label><select id="pax" name="pax">${[1,2,3,4,5,6].map(n => `<option value="${n}" ${n === state.pax ? "selected" : ""}>${n}</option>`).join("")}</select></div>
             <button class="primary-button" type="submit">Search buses</button>
@@ -283,8 +345,11 @@
     }
 
     function renderSearch() {
-      const visibleBuses = state.filter === "All Classes" ? buses : buses.filter(bus => bus.className === state.filter);
-      const counts = { "All Classes": 5, VIP: 1, Executive: 1, Standard: 3 };
+      const vehicles = allVehicles(state.from, state.to);
+      const visibleBuses = state.filter === "All Vehicles" ? vehicles : vehicles.filter(vehicle => vehicle.mode === state.filter);
+      const counts = { "All Vehicles": vehicles.length, Bus: 4, Matatu: 4 };
+      const busCount = visibleBuses.filter(vehicle => vehicle.mode === "Bus").length;
+      const matatuCount = visibleBuses.filter(vehicle => vehicle.mode === "Matatu").length;
       app.innerHTML = `
         <section class="route-banner">
           <button class="back-button" data-action="back" type="button"><span aria-hidden="true">←</span>Back</button>
@@ -292,28 +357,29 @@
           <p class="route-date">${dateLabel(state.date)}</p>
         </section>
         <main>
-          <nav class="class-tabs" aria-label="Filter bus class">
-            ${Object.entries(counts).map(([name,count]) => `<button type="button" class="class-tab ${state.filter === name ? "active" : ""}" data-filter="${name}">${name === "VIP" ? "♛ " : name === "Executive" ? "☆ " : name === "Standard" ? "♙ " : ""}${name}<span class="tab-count">${count}</span></button>`).join("")}
+          <nav class="class-tabs" aria-label="Filter vehicle type">
+            ${Object.entries(counts).map(([name,count]) => `<button type="button" class="class-tab ${state.filter === name ? "active" : ""}" data-filter="${name}">${name === "Bus" ? "▰ " : name === "Matatu" ? "🚐 " : ""}${name}<span class="tab-count">${count}</span></button>`).join("")}
           </nav>
-          <h1>${escapeHtml(routeTitle())} Bus Tickets</h1>
-          <p class="result-subtitle">${visibleBuses.length} ${visibleBuses.length === 1 ? "bus" : "buses"} available · ${dateLabel(state.date)}</p>
+          <h1>${escapeHtml(routeTitle())} Fares</h1>
+          <p class="result-subtitle">${busCount} buses available · ${matatuCount} matatus available · ${dateLabel(state.date)}</p>
+          <p class="fare-note">Estimated fares and sample departure times. Confirm the current fare, schedule, and seat availability with Simba Coach on WhatsApp before travelling.</p>
           <section class="bus-list" aria-label="Available buses">
             ${visibleBuses.length ? visibleBuses.map(bus => `
               <article class="bus-card">
                 <div class="bus-top">
                   <div class="bus-left">
-                    <span class="bus-class">${bus.className === "VIP" ? "♛ " : bus.className === "Executive" ? "☆ " : ""}${bus.className}</span>
+                    <span class="bus-class">${bus.mode}${bus.className !== bus.mode ? ` · ${bus.className}` : ""}</span>
                     <div class="journey">
                       <div><div class="time">${bus.time}</div><div class="city">${escapeHtml(state.from)}</div></div>
-                      <div class="duration"><span class="duration-line"></span><span>14–16 hrs</span></div>
+                      <div class="duration"><span class="duration-line"></span><span>${tripDuration(bus.hours)}</span></div>
                       <div><div class="city">${escapeHtml(state.to)}</div></div>
                     </div>
                   </div>
                   <div class="price-block"><div class="price">KES ${bus.price.toLocaleString("en-KE")}</div><div class="seats-left">♨ Only ${bus.left} seats left</div></div>
                 </div>
                 <div class="amenities">${bus.amenities.map(item => `<span class="amenity">${item}</span>`).join("")}</div>
-                <button class="primary-button" data-select="${bus.id}" type="button">Select Seat</button>
-              </article>`).join("") : `<p class="empty-state">No buses found for this class. Choose another class to see available trips.</p>`}
+                <button class="primary-button" data-select="${bus.id}" type="button">Select ${bus.mode} Seat</button>
+              </article>`).join("") : `<p class="empty-state">No vehicles found for this route.</p>`}
           </section>
         </main>`;
       document.querySelectorAll("[data-filter]").forEach(button => button.addEventListener("click", () => {
@@ -321,7 +387,7 @@
         renderSearch();
       }));
       document.querySelectorAll("[data-select]").forEach(button => button.addEventListener("click", () => {
-        state.bookingBus = buses.find(bus => bus.id === button.dataset.select);
+        state.bookingBus = vehicles.find(bus => bus.id === button.dataset.select);
         state.selectedSeats = [];
         pushRoute("seats", { schedule: state.bookingBus.id, passengers: state.pax });
       }));
@@ -331,21 +397,21 @@
       const bus = state.bookingBus;
       const total = state.selectedSeats.length * bus.price;
       app.innerHTML = `
-        ${routeBanner("Select Your Seat", `${state.from} → ${state.to} · ${bus.className} · ${bus.time}`)}
+        ${routeBanner("Select Your Seat", `${state.from} → ${state.to} · ${bus.mode}${bus.className !== bus.mode ? ` · ${bus.className}` : ""} · ${bus.time}`)}
         <main class="seat-main">
           <p class="seat-instructions">Pick as many seats as you need (${state.selectedSeats.length} selected)</p>
           <div class="legend" aria-label="Seat legend">
             <span class="legend-item"><span class="legend-swatch"></span>Available</span>
-            <span class="legend-item"><span class="legend-swatch vip"></span>${bus.className}</span>
+            <span class="legend-item"><span class="legend-swatch vip"></span>${bus.mode}</span>
             <span class="legend-item"><span class="legend-swatch selected"></span>Selected</span>
             <span class="legend-item"><span class="legend-swatch taken"></span>Taken</span>
           </div>
           <section class="seat-layout" aria-label="Bus seat map">
             <div class="bus-shell">
               <div class="bus-front"><span>♧ &nbsp; Entry</span><span class="driver">DRV</span></div>
-              <div class="vip-heading">${bus.className === "VIP" ? "♛ &nbsp;" : ""}${bus.className} Section${bus.className === "VIP" ? " &nbsp; ♛" : ""}</div>
+              <div class="vip-heading">${bus.className === "VIP" ? "♛ &nbsp;" : ""}${bus.mode} Section${bus.className !== bus.mode ? ` · ${bus.className}` : ""}${bus.className === "VIP" ? " &nbsp; ♛" : ""}</div>
               <div class="seat-grid">
-                ${Array.from({length: 24}, (_, i) => i + 1).map(number => {
+                ${Array.from({length: bus.seats}, (_, i) => i + 1).map(number => {
                   const taken = bus.taken.includes(number);
                   const selected = state.selectedSeats.includes(number);
                   return `<button type="button" class="seat ${taken ? "taken" : ""} ${selected ? "selected" : ""}" data-seat="${number}" ${taken ? "disabled" : ""} aria-label="Seat ${number}${taken ? " taken" : selected ? " selected" : ""}">${number}</button>`;
@@ -376,14 +442,14 @@
       const bus = state.bookingBus;
       const total = state.selectedSeats.length * bus.price;
       app.innerHTML = `
-        ${routeBanner("Passenger Details", `${state.from} → ${state.to} · ${bus.className} · ${bus.time}`)}
+        ${routeBanner("Passenger Details", `${state.from} → ${state.to} · ${bus.mode}${bus.className !== bus.mode ? ` · ${bus.className}` : ""} · ${bus.time}`)}
         <main>
           <section class="booking-card">
             <h2>Complete your booking</h2>
             <p>Enter the lead passenger’s details. We’ll open WhatsApp with your trip request ready to send.</p>
             <div class="booking-summary">
               <strong>${escapeHtml(routeTitle())}</strong><br>
-              ${dateLabel(state.date)} · ${bus.time} · ${bus.className}<br>
+              ${dateLabel(state.date)} · ${bus.time} · ${bus.mode}${bus.className !== bus.mode ? ` · ${bus.className}` : ""}<br>
               Seat${state.selectedSeats.length === 1 ? "" : "s"} ${state.selectedSeats.join(", ")} · KES ${total.toLocaleString("en-KE")}
             </div>
             <form class="booking-form" id="booking-form">
@@ -400,12 +466,12 @@
         const passengerName = String(form.get("name")).trim();
         const passengerPhone = String(form.get("phone")).trim();
         const message = [
-          "Hello Simba Coach, I would like to request a bus booking.",
+          "Hello Simba Coach, I would like to request a vehicle booking.",
           `Passenger: ${passengerName}`,
           `Phone: ${passengerPhone}`,
           `Route: ${state.from} to ${state.to}`,
           `Travel date: ${dateLabel(state.date)}`,
-          `Bus: ${bus.className}, ${bus.time}`,
+          `Vehicle: ${bus.mode}${bus.className !== bus.mode ? ` (${bus.className})` : ""}, ${bus.time}`,
           `Seat${state.selectedSeats.length === 1 ? "" : "s"}: ${state.selectedSeats.join(", ")}`,
           `Total: KES ${total.toLocaleString("en-KE")}`
         ].join("\n");
