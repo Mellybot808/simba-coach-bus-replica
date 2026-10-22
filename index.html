@@ -324,6 +324,13 @@
       ["Turkana", "Lodwar", 3.12, 35.60], ["Uasin Gishu", "Eldoret", 0.52, 35.27],
       ["Vihiga", "Mbale", 0.08, 34.72], ["Wajir", "Wajir", 1.75, 40.06],
       ["West Pokot", "Kapenguria", 1.24, 35.11],
+      ["Kwale", "Ukunda", -4.29, 39.57], ["Kwale", "Diani", -4.28, 39.59],
+      ["Kilifi", "Watamu", -3.35, 40.02], ["Lamu", "Mpeketoni", -2.39, 40.70],
+      ["Tana River", "Garsen", -2.27, 40.12], ["Taita-Taveta", "Voi", -3.39, 38.56],
+      ["Taita-Taveta", "Taveta", -3.40, 37.68], ["Nakuru", "Naivasha", -0.72, 36.43],
+      ["Nandi", "Nandi Hills", 0.10, 35.18], ["Laikipia", "Nanyuki", 0.02, 37.07],
+      ["Kakamega", "Mumias", 0.33, 34.49], ["Bungoma", "Webuye", 0.60, 34.77],
+      ["Busia", "Malaba", 0.63, 34.29], ["Marsabit", "Moyale", 3.52, 39.05],
       ["Tanzania", "Dar es Salaam", -6.16, 39.20], ["Tanzania", "Arusha", -3.37, 36.69],
       ["Tanzania", "Moshi", -3.35, 37.34], ["Tanzania", "Mwanza", -2.52, 32.90],
       ["Uganda", "Kampala", 0.35, 32.58], ["Uganda", "Entebbe", 0.05, 32.46],
@@ -332,11 +339,39 @@
     ];
     const legacyDestination = ["Dar es Salaam", -6.16, 39.20];
     const vehicleOptions = [
-      { mode: "Bus", className: "VIP", time: "08:00 PM", multiplier: 1.55, seats: 36, amenities: ["2+1 seating", "Extra legroom", "USB charging", "Refreshments"] },
-      { mode: "Bus", className: "Executive", time: "09:00 PM", multiplier: 1.35, seats: 36, amenities: ["2+2 seating", "Reclining seats", "USB charging"] },
-      { mode: "Bus", className: "Standard", time: "10:00 PM", multiplier: 1.15, seats: 40, amenities: ["2+2 seating", "Comfortable seats", "Luggage space"] },
-      { mode: "Bus", className: "Standard", time: "06:00 AM", multiplier: 1, seats: 40, amenities: ["2+2 seating", "Luggage space", "Day travel"] }
+      { mode: "Bus", className: "Standard", time: "08:00 AM", tier: "standard", seats: 40, amenities: ["2+3 seating", "Comfortable seats", "Affordable"] },
+      { mode: "Bus", className: "Standard", time: "11:00 AM", tier: "standard", seats: 40, amenities: ["2+3 seating", "Comfortable seats", "Affordable"] },
+      { mode: "Bus", className: "Executive", time: "04:00 PM", tier: "executive", seats: 36, amenities: ["2+2 seating", "Reclining seats", "WiFi", "LCD screens"] },
+      { mode: "Bus", className: "VIP", time: "08:00 PM", tier: "vip", seats: 24, amenities: ["2+1 seating", "Extra legroom", "USB charging", "Refreshments"] }
     ];
+    const referenceFareRanges = {
+      "Mombasa": [1300, 1500], "Ukunda": [1400, 1600], "Diani": [1400, 1600],
+      "Malindi": [1500, 1700], "Kilifi": [1400, 1600], "Watamu": [1500, 1800],
+      "Mpeketoni": [2500, 2800], "Lamu": [2500, 3000], "Garsen": [1800, 2200],
+      "Voi": [800, 1000], "Taveta": [1000, 1200], "Naivasha": [400, 500],
+      "Nakuru": [600, 800], "Narok": [700, 900], "Kericho": [800, 1000],
+      "Bomet": [900, 1100], "Eldoret": [1000, 1300], "Nandi Hills": [900, 1100],
+      "Kitale": [1200, 1500], "Kapenguria": [1400, 1600], "Lodwar": [2000, 2500],
+      "Kisumu": [1200, 1500], "Kisii": [1100, 1400], "Migori": [1300, 1500],
+      "Homa Bay": [1200, 1500], "Siaya": [1200, 1500], "Kakamega": [1200, 1500],
+      "Mumias": [1200, 1400], "Webuye": [1200, 1500], "Bungoma": [1300, 1600],
+      "Busia": [1400, 1700], "Malaba": [1400, 1700], "Thika": [200, 300],
+      "Machakos": [300, 400], "Nyeri": [500, 700], "Embu": [500, 700],
+      "Nanyuki": [600, 800], "Meru": [700, 900], "Isiolo": [800, 1000],
+      "Garissa": [1500, 1700], "Marsabit": [1500, 1800], "Moyale": [2000, 2500],
+      "Kampala": [3500, 4000], "Mbale": [2500, 3000], "Juba": [7000, 7500],
+      "Arusha": [1500, 2000], "Kigali": [6000, 6500], "Bujumbura": [7000, 7500],
+      "Dar es Salaam": [3500, 4500]
+    };
+    const exactVipFares = { "Nairobi|Mombasa": 1800 };
+    const referenceDurations = {
+      "Mombasa": "9–11 hrs", "Ukunda": "10–12 hrs", "Diani": "10–12 hrs",
+      "Malindi": "10–12 hrs", "Kilifi": "9–11 hrs", "Watamu": "10–12 hrs",
+      "Mpeketoni": "11–13 hrs", "Lamu": "12–14 hrs", "Garsen": "11–13 hrs",
+      "Voi": "5–6 hrs", "Taveta": "7–8 hrs", "Naivasha": "1.5–2 hrs",
+      "Nakuru": "3 hrs", "Narok": "3–4 hrs", "Kericho": "4–5 hrs",
+      "Bomet": "5–6 hrs"
+    };
     const topRoutes = [
       ["Nairobi", "Mombasa"], ["Nairobi", "Kampala"], ["Nairobi", "Dar es Salaam"],
       ["Nairobi", "Kisumu"], ["Mombasa", "Nairobi"], ["Nairobi", "Kigali"]
@@ -393,14 +428,37 @@
       const roadKm = Math.max(35, Math.round(6371 * 2 * Math.atan2(Math.sqrt(arc), Math.sqrt(1 - arc)) * 1.35));
       const baseEstimate = roadKm * 4.8 + 400;
       const idBase = `${fromPoint[1]}-${endPoint[1]}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      const routeKey = `${fromPoint[1]}|${endPoint[1]}`;
+      const reverseRouteKey = `${endPoint[1]}|${fromPoint[1]}`;
+      const referenceRange = fromPoint[1] === "Nairobi"
+        ? referenceFareRanges[endPoint[1]]
+        : endPoint[1] === "Nairobi" ? referenceFareRanges[fromPoint[1]] : undefined;
       return vehicleOptions.map((option, index) => {
-        const price = Math.max(100, Math.round((baseEstimate * option.multiplier - 400) / 50) * 50);
-        const taken = Array.from({ length: Math.floor(option.seats * 0.22) }, (_, i) => ((index * 3 + i * 5) % option.seats) + 1);
+        const standardFare = referenceRange?.[0] ?? Math.max(100, Math.round(baseEstimate / 50) * 50);
+        const executiveFare = referenceRange?.[1] ?? Math.max(100, Math.round(baseEstimate * 1.15 / 50) * 50);
+        const vipFare = exactVipFares[routeKey] ?? exactVipFares[reverseRouteKey] ?? (referenceRange
+          ? referenceRange[1] + 300
+          : Math.max(100, Math.round(baseEstimate * 1.35 / 50) * 50));
+        const price = option.tier === "standard" ? standardFare : option.tier === "executive" ? executiveFare : vipFare;
+        const availableSeats = new Set([9, 11, 14, 15]);
+        const taken = Array.from({ length: Math.floor(option.seats * 0.22) }, (_, i) => ((index * 3 + i * 5) % option.seats) + 1)
+          .filter(seat => seat <= option.seats && !availableSeats.has(seat));
         return {
           ...option, id: `${idBase}-${index + 1}`, price, left: option.seats - taken.length, taken,
-          hours: Math.max(1, Math.round(roadKm / (option.mode === "Bus" ? 55 : 48)))
+          hours: Math.max(1, Math.round(roadKm / 55)),
+          duration: fromPoint[1] === "Nairobi"
+            ? referenceDurations[endPoint[1]]
+            : endPoint[1] === "Nairobi" ? referenceDurations[fromPoint[1]] : undefined
         };
       });
+    };
+    const routeFareRange = (from, to) => {
+      const directRange = from === "Nairobi"
+        ? referenceFareRanges[to]
+        : to === "Nairobi" ? referenceFareRanges[from] : undefined;
+      if (directRange) return directRange;
+      const prices = allVehicles(from, to).map(bus => bus.price);
+      return [Math.min(...prices), Math.max(...prices)];
     };
     const params = new URLSearchParams(location.search);
     const currentParams = () => new URLSearchParams(location.search);
@@ -412,7 +470,7 @@
       to: initialTo,
       date: params.get("date") || "2026-10-22",
       pax: Math.max(1, Number(params.get("pax") || 1)),
-      filter: "All Buses",
+      filter: "All Classes",
       selectedSeats: (params.get("seats") || "").split(",").filter(Boolean).map(Number),
       bookingBus: allVehicles(initialFrom, initialTo).find(bus => bus.id === params.get("schedule")) || allVehicles(initialFrom, initialTo)[0]
     };
@@ -444,7 +502,7 @@
     const searchRoute = (from, to) => {
       state.from = from;
       state.to = to;
-      state.filter = "All Buses";
+      state.filter = "All Classes";
       state.selectedSeats = [];
       pushRoute("search");
     };
@@ -457,7 +515,7 @@
       if (!destinations.some(([, city]) => city === selected)) options += `<option value="${escapeHtml(selected)}" selected>${escapeHtml(selected)}</option>`;
       return options;
     };
-    const tripDuration = hours => `${hours}–${hours + 2} hrs`;
+    const tripDuration = bus => bus.duration || `${bus.hours}–${bus.hours + 2} hrs`;
     const routeBanner = (title, subtitle, backLabel = "Back") => `
       <section class="route-banner">
         <button class="back-button" data-action="back" type="button"><span aria-hidden="true">←</span>${backLabel}</button>
@@ -505,8 +563,8 @@
             </div>
             <div class="top-route-grid">
               ${topRoutes.map(([from, to], index) => {
-                const fare = Math.min(...allVehicles(from, to).map(bus => bus.price));
-                return `<button class="top-route-card" type="button" data-top-from="${escapeHtml(from)}" data-top-to="${escapeHtml(to)}" style="background-image:url('${photoUrl(index + 1)}')"><span><span class="top-route-name">${escapeHtml(from)} → ${escapeHtml(to)}</span><span class="top-route-meta">Bus fares from KES ${fare.toLocaleString("en-KE")}</span></span></button>`;
+                const [minimumFare] = routeFareRange(from, to);
+                return `<button class="top-route-card" type="button" data-top-from="${escapeHtml(from)}" data-top-to="${escapeHtml(to)}" style="background-image:url('${photoUrl(index + 1)}')"><span><span class="top-route-name">${escapeHtml(from)} → ${escapeHtml(to)}</span><span class="top-route-meta">Bus fares from KES ${minimumFare.toLocaleString("en-KE")}</span></span></button>`;
               }).join("")}
             </div>
           </section>
@@ -520,13 +578,13 @@
             <div class="popular-route-grid">
               ${visiblePopularRoutes.map((route, index) => {
                 const bus = allVehicles(route.from, route.to)[0];
-                const baseFare = Math.min(...allVehicles(route.from, route.to).map(option => option.price));
+                const [minimumFare, maximumFare] = routeFareRange(route.from, route.to);
                 return `<article class="popular-route-card">
                   <img class="popular-route-photo" src="${photoUrl(index + 7)}" alt="Simba Coach bus for the ${escapeHtml(route.from)} to ${escapeHtml(route.to)} route" loading="lazy">
                   <div class="popular-route-info">
                     <p class="popular-route-country">${escapeHtml(route.country)}</p>
                     <h3>${escapeHtml(route.from)} → ${escapeHtml(route.to)}</h3>
-                    <div class="popular-route-details"><span>Approx. ${tripDuration(bus.hours)}</span><strong>From KES ${baseFare.toLocaleString("en-KE")}</strong></div>
+                    <div class="popular-route-details"><span>Approx. ${tripDuration(bus)}</span><strong>KES ${minimumFare.toLocaleString("en-KE")} – ${maximumFare.toLocaleString("en-KE")}</strong></div>
                     <button type="button" class="route-book-button" data-popular-from="${escapeHtml(route.from)}" data-popular-to="${escapeHtml(route.to)}">View bus fares</button>
                   </div>
                 </article>`;
@@ -542,7 +600,7 @@
         state.to = String(form.get("to")).trim();
         state.date = String(form.get("date"));
         state.pax = Number(form.get("pax"));
-        state.filter = "All Buses";
+        state.filter = "All Classes";
         pushRoute("search");
       });
       document.querySelectorAll("[data-top-from], [data-popular-from]").forEach(button => button.addEventListener("click", () => {
@@ -556,8 +614,8 @@
 
     function renderSearch() {
       const vehicles = allVehicles(state.from, state.to);
-      const counts = { "All Buses": vehicles.length, VIP: 1, Executive: 1, Standard: 2 };
-      const visibleBuses = state.filter === "All Buses" ? vehicles : vehicles.filter(vehicle => vehicle.className === state.filter);
+      const counts = { "All Classes": vehicles.length, VIP: 1, Executive: 1, Standard: 2 };
+      const visibleBuses = state.filter === "All Classes" ? vehicles : vehicles.filter(vehicle => vehicle.className === state.filter);
       app.innerHTML = `
         <section class="route-banner">
           <button class="back-button" data-action="back" type="button"><span aria-hidden="true">←</span>Back</button>
@@ -566,27 +624,27 @@
         </section>
         <main>
           <nav class="class-tabs" aria-label="Filter bus class">
-            ${Object.entries(counts).map(([name,count]) => `<button type="button" class="class-tab ${state.filter === name ? "active" : ""}" data-filter="${name}">▰ ${name}<span class="tab-count">${count}</span></button>`).join("")}
+            ${Object.entries(counts).map(([name,count]) => `<button type="button" class="class-tab ${state.filter === name ? "active" : ""}" data-filter="${name}">${name === "Standard" ? "▰ " : name === "Executive" ? "◆ " : name === "VIP" ? "♛ " : ""}${name}<span class="tab-count">${count}</span></button>`).join("")}
           </nav>
-          <h1>${escapeHtml(routeTitle())} Fares</h1>
+          <h1>${escapeHtml(routeTitle())} Bus Tickets</h1>
           <p class="result-subtitle">${visibleBuses.length} buses available · ${dateLabel(state.date)}</p>
-          <p class="fare-note">Estimated fares and sample departure times. Confirm the current fare, schedule, and seat availability with Simba Coach on WhatsApp before travelling.</p>
+          <p class="fare-note">Listed routes use the displayed route fares; other connections show estimates. Confirm the fare, schedule, and seat availability with Simba Coach on WhatsApp before travelling.</p>
           <section class="bus-list" aria-label="Available buses">
             ${visibleBuses.length ? visibleBuses.map(bus => `
               <article class="bus-card">
                 <div class="bus-top">
                   <div class="bus-left">
-                    <span class="bus-class">${bus.mode}${bus.className !== bus.mode ? ` · ${bus.className}` : ""}</span>
+                    <span class="bus-class">${bus.className}</span>
                     <div class="journey">
                       <div><div class="time">${bus.time}</div><div class="city">${escapeHtml(state.from)}</div></div>
-                      <div class="duration"><span class="duration-line"></span><span>${tripDuration(bus.hours)}</span></div>
+                      <div class="duration"><span class="duration-line"></span><span>${tripDuration(bus)}</span></div>
                       <div><div class="city">${escapeHtml(state.to)}</div></div>
                     </div>
                   </div>
-                  <div class="price-block"><div class="price">KES ${bus.price.toLocaleString("en-KE")}</div><div class="seats-left">♨ Only ${bus.left} seats left</div></div>
+                  <div class="price-block"><div class="price">KES ${bus.price.toLocaleString("en-KE")}</div><div class="seats-left">Only ${bus.left} seats left</div></div>
                 </div>
                 <div class="amenities">${bus.amenities.map(item => `<span class="amenity">${item}</span>`).join("")}</div>
-                <button class="primary-button" data-select="${bus.id}" type="button">Select ${bus.className} Seat</button>
+                <button class="primary-button" data-select="${bus.id}" type="button">Select Seat</button>
               </article>`).join("") : `<p class="empty-state">No vehicles found for this route.</p>`}
           </section>
         </main>`;
