@@ -142,6 +142,62 @@
     .site-footer p { margin: 5px 0; }
     .site-footer a { color: white; }
     .empty-state { padding: 30px; border: 1px solid var(--line); border-radius: 14px; background: white; color: var(--muted); text-align: center; }
+    .notice-strip { padding: 10px 20px; background: #111d35; color: #f7f8fa; text-align: center; font-size: 14px; font-weight: 650; }
+    .home-hero {
+      position: relative; min-height: 510px; display: grid; align-items: center; padding: 48px max(24px, calc((100vw - 1200px) / 2));
+      background-color: var(--navy-dark); background-position: center 44%; background-size: cover; color: white;
+    }
+    .home-hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #111d35e8 0%, #142746c9 54%, #14274655 100%); }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; padding: 35px 0; }
+    .eyebrow { margin: 0 0 16px; color: #c4d66e; font-size: 13px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+    .hero-title { max-width: 680px; margin: 0 0 16px; font-size: clamp(36px, 5vw, 58px); line-height: 1.08; letter-spacing: -1.5px; }
+    .hero-copy { max-width: 620px; margin: 0; color: #d7deeb; font-size: 19px; line-height: 1.55; }
+    .hero-highlights { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 27px; }
+    .hero-highlight { padding: 10px 15px; border: 1px solid #ffffff26; border-radius: 26px; background: #ffffff17; font-size: 14px; }
+    .search-wrap { position: relative; z-index: 2; width: min(1200px, calc(100% - 48px)); margin: -36px auto 0; }
+    .search-panel { padding: 22px; border: 1px solid #e2e5eb; border-radius: 18px; background: white; box-shadow: 0 18px 45px #15234324; }
+    .trip-type { display: flex; gap: 8px; margin: 0 0 18px; }
+    .trip-type span { padding: 8px 16px; border-radius: 24px; background: #edf1f7; color: var(--navy); font-size: 13px; font-weight: 800; text-transform: uppercase; }
+    .search-form { grid-template-columns: 1fr 1fr 1fr 125px 155px; margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
+    .search-form .field label { text-transform: uppercase; letter-spacing: .06em; }
+    .search-form .primary-button { background: #5e7d24; }
+    .search-form .primary-button:hover { background: #4c671c; }
+    .home-main { width: min(1200px, 100%); margin: 0 auto; padding: 42px 24px 60px; }
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0 auto 42px; border: 1px solid var(--line); border-radius: 14px; background: white; }
+    .stat-item { padding: 22px 16px; text-align: center; }
+    .stat-item + .stat-item { border-left: 1px solid var(--line); }
+    .stat-number { margin: 0; color: var(--navy); font-size: 25px; font-weight: 850; }
+    .stat-label { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .home-section { margin-top: 44px; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 20px; }
+    .section-heading h2 { margin: 0; color: var(--navy-dark); font-size: 27px; letter-spacing: -.5px; }
+    .section-heading p { margin: 6px 0 0; color: var(--muted); }
+    .top-route-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .top-route-card {
+      position: relative; display: flex; min-height: 150px; align-items: end; overflow: hidden; padding: 18px;
+      border: 0; border-radius: 14px; background-color: var(--navy); background-position: center; background-size: cover; color: white; text-align: left;
+    }
+    .top-route-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #111d35e8, #111d3510 90%); transition: background .2s; }
+    .top-route-card:hover::before { background: linear-gradient(0deg, #111d35f2, #111d3530 90%); }
+    .top-route-card span { position: relative; z-index: 1; }
+    .top-route-name { display: block; font-size: 20px; font-weight: 800; }
+    .top-route-meta { display: block; margin-top: 5px; color: #e0e6f0; font-size: 13px; }
+    .route-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+    .route-filter { padding: 9px 15px; border: 1px solid #d9dce2; border-radius: 24px; background: white; color: var(--navy); font-weight: 700; }
+    .route-filter.active { border-color: var(--navy); background: var(--navy); color: white; }
+    .popular-route-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .popular-route-card { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: white; box-shadow: 0 3px 12px #1427460d; }
+    .popular-route-photo { display: block; width: 100%; height: 160px; object-fit: cover; background: #e8ebef; }
+    .popular-route-info { padding: 16px; }
+    .popular-route-country { margin: 0 0 7px; color: #657f2d; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .popular-route-info h3 { margin: 0; color: var(--navy); font-size: 19px; }
+    .popular-route-details { display: flex; justify-content: space-between; gap: 12px; margin: 11px 0 15px; color: var(--muted); font-size: 13px; }
+    .popular-route-details strong { color: var(--navy); font-size: 14px; }
+    .route-book-button { width: 100%; padding: 10px; border: 1px solid #d9dce2; border-radius: 8px; background: white; color: var(--navy); font-weight: 750; }
+    .route-book-button:hover { border-color: var(--navy); background: #f3f5f8; }
+    .regional-note { margin: 18px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .chat-float { position: fixed; z-index: 4; right: 22px; bottom: 20px; padding: 13px 19px; border-radius: 28px; background: #20c66b; color: white; box-shadow: 0 7px 22px #1020433d; font-weight: 800; text-decoration: none; }
+    .chat-float:hover { background: #16ad59; }
     @media (max-width: 700px) {
       .site-header { height: 66px; padding: 6px 16px; }
       .brand { min-width: 0; }
@@ -173,6 +229,35 @@
       .search-form .primary-button { grid-column: span 2; }
       .step-heading { font-size: 24px; }
       .seat-instructions { font-size: 16px; }
+      .notice-strip { padding: 8px 12px; font-size: 11px; }
+      .home-hero { min-height: 440px; padding: 24px 20px 65px; background-position: 58% center; }
+      .hero-content { padding: 20px 0; }
+      .hero-title { font-size: 37px; }
+      .hero-copy { font-size: 16px; }
+      .hero-highlights { gap: 7px; margin-top: 20px; }
+      .hero-highlight { padding: 8px 11px; font-size: 12px; }
+      .search-wrap { width: calc(100% - 28px); margin-top: -42px; }
+      .search-panel { padding: 16px; }
+      .search-form { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .search-form .primary-button { grid-column: span 2; }
+      .home-main { padding: 28px 16px 44px; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); margin-bottom: 32px; }
+      .stat-item { padding: 16px 10px; }
+      .stat-item:nth-child(3) { border-left: 0; border-top: 1px solid var(--line); }
+      .stat-item:nth-child(4) { border-top: 1px solid var(--line); }
+      .stat-number { font-size: 22px; }
+      .section-heading { display: block; }
+      .section-heading h2 { font-size: 23px; }
+      .route-filters { margin-top: 14px; }
+      .top-route-grid, .popular-route-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .top-route-card { min-height: 130px; padding: 13px; }
+      .top-route-name { font-size: 16px; }
+      .top-route-meta { font-size: 11px; }
+      .popular-route-photo { height: 125px; }
+      .popular-route-info { padding: 12px; }
+      .popular-route-info h3 { font-size: 16px; }
+      .popular-route-details { display: grid; gap: 4px; margin: 9px 0 12px; }
+      .chat-float { right: 13px; bottom: 13px; padding: 11px 15px; font-size: 14px; }
     }
     @media (max-width: 420px) {
       .phone-pill { padding: 9px 10px; font-size: 12px; }
@@ -183,6 +268,9 @@
       .seats-left { margin-top: 0; }
       .seat-grid { gap: 11px 8px; }
       .seat { min-height: 58px; }
+      .top-route-grid, .popular-route-grid { grid-template-columns: 1fr; }
+      .top-route-card { min-height: 145px; }
+      .popular-route-photo { height: 175px; }
     }
   </style>
 </head>
@@ -201,7 +289,9 @@
       <a href="tel:+254105686866">Call +254 105 686 866</a>
     </nav>
   </header>
+  <div class="notice-strip">Comfortable journeys across Kenya &amp; East Africa · Plan your trip online · Book via WhatsApp</div>
   <div id="app"></div>
+  <a class="chat-float" href="https://wa.me/254105686866" target="_blank" rel="noopener noreferrer" aria-label="Chat with Simba Coach on WhatsApp">◉ &nbsp; Chat Us</a>
   <footer class="site-footer">
     <p>Simba Coach — The Pride of Travellers</p>
     <p><a href="tel:+254105686866">+254 105 686 866</a> · <a href="mailto:infosimbacoachbus@gmail.com">infosimbacoachbus@gmail.com</a></p>
@@ -233,19 +323,65 @@
       ["Tharaka-Nithi", "Kathwana", -0.33, 37.86], ["Trans-Nzoia", "Kitale", 1.02, 35.00],
       ["Turkana", "Lodwar", 3.12, 35.60], ["Uasin Gishu", "Eldoret", 0.52, 35.27],
       ["Vihiga", "Mbale", 0.08, 34.72], ["Wajir", "Wajir", 1.75, 40.06],
-      ["West Pokot", "Kapenguria", 1.24, 35.11]
+      ["West Pokot", "Kapenguria", 1.24, 35.11],
+      ["Tanzania", "Dar es Salaam", -6.16, 39.20], ["Tanzania", "Arusha", -3.37, 36.69],
+      ["Tanzania", "Moshi", -3.35, 37.34], ["Tanzania", "Mwanza", -2.52, 32.90],
+      ["Uganda", "Kampala", 0.35, 32.58], ["Uganda", "Entebbe", 0.05, 32.46],
+      ["Uganda", "Jinja", 0.44, 33.20], ["Rwanda", "Kigali", -1.94, 30.06],
+      ["Burundi", "Bujumbura", -3.38, 29.36], ["South Sudan", "Juba", 4.85, 31.58]
     ];
     const legacyDestination = ["Dar es Salaam", -6.16, 39.20];
     const vehicleOptions = [
       { mode: "Bus", className: "VIP", time: "08:00 PM", multiplier: 1.55, seats: 36, amenities: ["2+1 seating", "Extra legroom", "USB charging", "Refreshments"] },
       { mode: "Bus", className: "Executive", time: "09:00 PM", multiplier: 1.35, seats: 36, amenities: ["2+2 seating", "Reclining seats", "USB charging"] },
       { mode: "Bus", className: "Standard", time: "10:00 PM", multiplier: 1.15, seats: 40, amenities: ["2+2 seating", "Comfortable seats", "Luggage space"] },
-      { mode: "Bus", className: "Standard", time: "06:00 AM", multiplier: 1, seats: 40, amenities: ["2+2 seating", "Luggage space", "Day travel"] },
-      { mode: "Matatu", className: "Matatu", time: "06:00 AM", multiplier: 0.92, seats: 14, amenities: ["14-seater", "Day service", "Luggage space"] },
-      { mode: "Matatu", className: "Matatu", time: "08:00 AM", multiplier: 1, seats: 14, amenities: ["14-seater", "Day service", "Luggage space"] },
-      { mode: "Matatu", className: "Matatu", time: "10:00 AM", multiplier: 1.04, seats: 14, amenities: ["14-seater", "Day service", "Luggage space"] },
-      { mode: "Matatu", className: "Matatu", time: "02:00 PM", multiplier: 0.96, seats: 14, amenities: ["14-seater", "Afternoon service", "Luggage space"] }
+      { mode: "Bus", className: "Standard", time: "06:00 AM", multiplier: 1, seats: 40, amenities: ["2+2 seating", "Luggage space", "Day travel"] }
     ];
+    const topRoutes = [
+      ["Nairobi", "Mombasa"], ["Nairobi", "Kampala"], ["Nairobi", "Dar es Salaam"],
+      ["Nairobi", "Kisumu"], ["Mombasa", "Nairobi"], ["Nairobi", "Kigali"]
+    ];
+    const popularRoutes = [
+      { from: "Nairobi", to: "Mombasa", country: "Kenya" },
+      { from: "Nairobi", to: "Kisumu", country: "Kenya" },
+      { from: "Nairobi", to: "Eldoret", country: "Kenya" },
+      { from: "Nairobi", to: "Kampala", country: "Uganda" },
+      { from: "Nairobi", to: "Dar es Salaam", country: "Tanzania" },
+      { from: "Nairobi", to: "Kigali", country: "Rwanda" },
+      { from: "Nairobi", to: "Bujumbura", country: "Burundi" },
+      { from: "Nairobi", to: "Juba", country: "South Sudan" }
+    ];
+    const photoFiles = [
+      "WhatsApp Image 2026-10-22 at 9.23.08 PM.jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.09 PM.jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.09 PM (1).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.09 PM (2).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.09 PM (3).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.10 PM.jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.10 PM (1).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.10 PM (2).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.10 PM (3).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.11 PM.jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.11 PM (1).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.11 PM (2).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.11 PM (3).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.12 PM.jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.12 PM (1).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.12 PM (2).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.12 PM (3).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.13 PM.jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.13 PM (1).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.13 PM (2).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.13 PM (3).jpeg",
+      "WhatsApp Image 2026-10-22 at 9.23.14 PM.jpeg"
+    ];
+    const randomPhotos = [...photoFiles];
+    for (let index = randomPhotos.length - 1; index > 0; index--) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [randomPhotos[index], randomPhotos[swapIndex]] = [randomPhotos[swapIndex], randomPhotos[index]];
+    }
+    const photoUrl = index => `./${encodeURI(randomPhotos[index % randomPhotos.length])}`;
+    let popularRouteFilter = "All";
     const allVehicles = (from, to) => {
       const fromPoint = destinations.find(item => item[1] === from) || destinations.find(item => item[0] === from) || destinations[29];
       const knownDestination = destinations.find(item => item[1] === to) || destinations.find(item => item[0] === to);
@@ -276,7 +412,7 @@
       to: initialTo,
       date: params.get("date") || "2026-10-22",
       pax: Math.max(1, Number(params.get("pax") || 1)),
-      filter: "All Vehicles",
+      filter: "All Buses",
       selectedSeats: (params.get("seats") || "").split(",").filter(Boolean).map(Number),
       bookingBus: allVehicles(initialFrom, initialTo).find(bus => bus.id === params.get("schedule")) || allVehicles(initialFrom, initialTo)[0]
     };
@@ -305,10 +441,21 @@
       return `${location.pathname}?${query}`;
     };
     const pushRoute = (step, extra) => { history.pushState({}, "", routeUrl(step, extra)); render(); window.scrollTo(0, 0); };
+    const searchRoute = (from, to) => {
+      state.from = from;
+      state.to = to;
+      state.filter = "All Buses";
+      state.selectedSeats = [];
+      pushRoute("search");
+    };
     const routeOptions = selected => {
-      const options = destinations.map(([, city]) => `<option value="${escapeHtml(city)}" ${city === selected ? "selected" : ""}>${escapeHtml(city)}</option>`);
-      if (!destinations.some(([, city]) => city === selected)) options.push(`<option value="${escapeHtml(selected)}" selected>${escapeHtml(selected)} (outside Kenya)</option>`);
-      return options.join("");
+      const countries = new Set(["Tanzania", "Uganda", "Rwanda", "Burundi", "South Sudan"]);
+      const optionsFor = items => items.map(([, city]) => `<option value="${escapeHtml(city)}" ${city === selected ? "selected" : ""}>${escapeHtml(city)}</option>`).join("");
+      const kenya = destinations.filter(([region]) => !countries.has(region));
+      const regional = destinations.filter(([region]) => countries.has(region));
+      let options = `<optgroup label="Kenya">${optionsFor(kenya)}</optgroup><optgroup label="East Africa">${optionsFor(regional)}</optgroup>`;
+      if (!destinations.some(([, city]) => city === selected)) options += `<option value="${escapeHtml(selected)}" selected>${escapeHtml(selected)}</option>`;
+      return options;
     };
     const tripDuration = hours => `${hours}–${hours + 2} hrs`;
     const routeBanner = (title, subtitle, backLabel = "Back") => `
@@ -319,12 +466,23 @@
       </section>`;
 
     function renderHome() {
+      const visiblePopularRoutes = popularRoutes.filter(route => popularRouteFilter === "All" || route.country === popularRouteFilter);
       app.innerHTML = `
-        <section class="route-banner">
-          <h1 class="step-heading">Book your next journey</h1>
-          <p class="step-subheading">Comfortable bus travel across Kenya and East Africa</p>
+        <section class="home-hero" style="background-image:url('${photoUrl(0)}')">
+          <div class="hero-content">
+            <p class="eyebrow">The Pride of Travellers</p>
+            <h1 class="hero-title">Travel across Kenya &amp; East Africa with comfort and confidence</h1>
+            <p class="hero-copy">Find a bus for your next journey. Explore destinations, compare estimated fares, and send your booking request on WhatsApp.</p>
+            <div class="hero-highlights">
+              <span class="hero-highlight">✓ &nbsp;All 47 counties</span>
+              <span class="hero-highlight">✓ &nbsp;Regional destinations</span>
+              <span class="hero-highlight">✓ &nbsp;WhatsApp booking</span>
+            </div>
+          </div>
         </section>
-        <main>
+        <div class="search-wrap">
+          <section class="search-panel" aria-label="Find a bus">
+            <div class="trip-type"><span>One way</span></div>
           <form class="search-form" id="search-form">
             <div class="field"><label for="from">From</label><select id="from" name="from" required>${routeOptions(state.from)}</select></div>
             <div class="field"><label for="to">To</label><select id="to" name="to" required>${routeOptions(state.to)}</select></div>
@@ -332,6 +490,50 @@
             <div class="field"><label for="pax">Passengers</label><select id="pax" name="pax">${[1,2,3,4,5,6].map(n => `<option value="${n}" ${n === state.pax ? "selected" : ""}>${n}</option>`).join("")}</select></div>
             <button class="primary-button" type="submit">Search buses</button>
           </form>
+          </section>
+        </div>
+        <main class="home-main">
+          <section class="stats-row" aria-label="Travel network">
+            <div class="stat-item"><p class="stat-number">47</p><p class="stat-label">Kenyan counties</p></div>
+            <div class="stat-item"><p class="stat-number">6</p><p class="stat-label">East African countries</p></div>
+            <div class="stat-item"><p class="stat-number">4</p><p class="stat-label">Bus options per route</p></div>
+            <div class="stat-item"><p class="stat-number">24/7</p><p class="stat-label">WhatsApp enquiries</p></div>
+          </section>
+          <section class="home-section" aria-labelledby="top-routes-title">
+            <div class="section-heading">
+              <div><h2 id="top-routes-title">Top Routes</h2><p>Choose a frequent journey to view bus fares.</p></div>
+            </div>
+            <div class="top-route-grid">
+              ${topRoutes.map(([from, to], index) => {
+                const fare = Math.min(...allVehicles(from, to).map(bus => bus.price));
+                return `<button class="top-route-card" type="button" data-top-from="${escapeHtml(from)}" data-top-to="${escapeHtml(to)}" style="background-image:url('${photoUrl(index + 1)}')"><span><span class="top-route-name">${escapeHtml(from)} → ${escapeHtml(to)}</span><span class="top-route-meta">Bus fares from KES ${fare.toLocaleString("en-KE")}</span></span></button>`;
+              }).join("")}
+            </div>
+          </section>
+          <section class="home-section" aria-labelledby="popular-routes-title">
+            <div class="section-heading">
+              <div><h2 id="popular-routes-title">Popular Routes</h2><p>Popular journeys across Kenya and East Africa.</p></div>
+              <div class="route-filters" aria-label="Filter popular routes">
+                ${["All", "Kenya", "Uganda", "Tanzania", "Rwanda", "Burundi", "South Sudan"].map(country => `<button type="button" class="route-filter ${popularRouteFilter === country ? "active" : ""}" data-country="${country}">${country}</button>`).join("")}
+              </div>
+            </div>
+            <div class="popular-route-grid">
+              ${visiblePopularRoutes.map((route, index) => {
+                const bus = allVehicles(route.from, route.to)[0];
+                const baseFare = Math.min(...allVehicles(route.from, route.to).map(option => option.price));
+                return `<article class="popular-route-card">
+                  <img class="popular-route-photo" src="${photoUrl(index + 7)}" alt="Simba Coach bus for the ${escapeHtml(route.from)} to ${escapeHtml(route.to)} route" loading="lazy">
+                  <div class="popular-route-info">
+                    <p class="popular-route-country">${escapeHtml(route.country)}</p>
+                    <h3>${escapeHtml(route.from)} → ${escapeHtml(route.to)}</h3>
+                    <div class="popular-route-details"><span>Approx. ${tripDuration(bus.hours)}</span><strong>From KES ${baseFare.toLocaleString("en-KE")}</strong></div>
+                    <button type="button" class="route-book-button" data-popular-from="${escapeHtml(route.from)}" data-popular-to="${escapeHtml(route.to)}">View bus fares</button>
+                  </div>
+                </article>`;
+              }).join("")}
+            </div>
+            <p class="regional-note">East Africa destinations include Uganda, Tanzania, Rwanda, Burundi, and South Sudan, alongside routes to all 47 Kenyan county headquarters. Fares and departure times shown are estimates and should be confirmed before travel.</p>
+          </section>
         </main>`;
       document.querySelector("#search-form").addEventListener("submit", event => {
         event.preventDefault();
@@ -340,16 +542,22 @@
         state.to = String(form.get("to")).trim();
         state.date = String(form.get("date"));
         state.pax = Number(form.get("pax"));
+        state.filter = "All Buses";
         pushRoute("search");
       });
+      document.querySelectorAll("[data-top-from], [data-popular-from]").forEach(button => button.addEventListener("click", () => {
+        searchRoute(button.dataset.topFrom || button.dataset.popularFrom, button.dataset.topTo || button.dataset.popularTo);
+      }));
+      document.querySelectorAll("[data-country]").forEach(button => button.addEventListener("click", () => {
+        popularRouteFilter = button.dataset.country;
+        renderHome();
+      }));
     }
 
     function renderSearch() {
       const vehicles = allVehicles(state.from, state.to);
-      const visibleBuses = state.filter === "All Vehicles" ? vehicles : vehicles.filter(vehicle => vehicle.mode === state.filter);
-      const counts = { "All Vehicles": vehicles.length, Bus: 4, Matatu: 4 };
-      const busCount = visibleBuses.filter(vehicle => vehicle.mode === "Bus").length;
-      const matatuCount = visibleBuses.filter(vehicle => vehicle.mode === "Matatu").length;
+      const counts = { "All Buses": vehicles.length, VIP: 1, Executive: 1, Standard: 2 };
+      const visibleBuses = state.filter === "All Buses" ? vehicles : vehicles.filter(vehicle => vehicle.className === state.filter);
       app.innerHTML = `
         <section class="route-banner">
           <button class="back-button" data-action="back" type="button"><span aria-hidden="true">←</span>Back</button>
@@ -357,11 +565,11 @@
           <p class="route-date">${dateLabel(state.date)}</p>
         </section>
         <main>
-          <nav class="class-tabs" aria-label="Filter vehicle type">
-            ${Object.entries(counts).map(([name,count]) => `<button type="button" class="class-tab ${state.filter === name ? "active" : ""}" data-filter="${name}">${name === "Bus" ? "▰ " : name === "Matatu" ? "🚐 " : ""}${name}<span class="tab-count">${count}</span></button>`).join("")}
+          <nav class="class-tabs" aria-label="Filter bus class">
+            ${Object.entries(counts).map(([name,count]) => `<button type="button" class="class-tab ${state.filter === name ? "active" : ""}" data-filter="${name}">▰ ${name}<span class="tab-count">${count}</span></button>`).join("")}
           </nav>
           <h1>${escapeHtml(routeTitle())} Fares</h1>
-          <p class="result-subtitle">${busCount} buses available · ${matatuCount} matatus available · ${dateLabel(state.date)}</p>
+          <p class="result-subtitle">${visibleBuses.length} buses available · ${dateLabel(state.date)}</p>
           <p class="fare-note">Estimated fares and sample departure times. Confirm the current fare, schedule, and seat availability with Simba Coach on WhatsApp before travelling.</p>
           <section class="bus-list" aria-label="Available buses">
             ${visibleBuses.length ? visibleBuses.map(bus => `
@@ -378,7 +586,7 @@
                   <div class="price-block"><div class="price">KES ${bus.price.toLocaleString("en-KE")}</div><div class="seats-left">♨ Only ${bus.left} seats left</div></div>
                 </div>
                 <div class="amenities">${bus.amenities.map(item => `<span class="amenity">${item}</span>`).join("")}</div>
-                <button class="primary-button" data-select="${bus.id}" type="button">Select ${bus.mode} Seat</button>
+                <button class="primary-button" data-select="${bus.id}" type="button">Select ${bus.className} Seat</button>
               </article>`).join("") : `<p class="empty-state">No vehicles found for this route.</p>`}
           </section>
         </main>`;
