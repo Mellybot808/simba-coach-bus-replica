@@ -53,11 +53,13 @@
     .menu-panel a { padding: 11px 12px; color: var(--text); text-decoration: none; border-radius: 8px; }
     .menu-panel a:hover { background: #f0f2f6; }
     .route-banner { background: var(--navy); color: white; padding: 32px max(24px, calc((100vw - 1200px) / 2)) 34px; }
+    .route-banner.search-route-banner { padding-bottom: 64px; }
     .back-button {
       display: inline-flex; align-items: center; gap: 12px; border: 0; padding: 7px 12px 7px 0;
       color: #d8dfeb; background: transparent; font-size: 16px;
     }
     .route-title { display: flex; align-items: center; gap: 12px; margin: 30px 0 6px; font-size: 25px; font-weight: 760; }
+    .route-title svg { width: 22px; height: 26px; flex: 0 0 auto; }
     .route-date { margin: 0; color: #c4cddd; font-size: 17px; }
     main { width: min(1200px, 100%); margin: 0 auto; padding: 30px 24px 48px; }
     .class-tabs { display: flex; gap: 12px; overflow-x: auto; padding: 6px 0 8px; margin-bottom: 30px; }
@@ -67,6 +69,7 @@
       color: var(--text); font-size: 17px; font-weight: 650;
     }
     .class-tab.active { border-color: var(--navy); background: var(--navy); color: white; }
+    .tab-icon { width: 22px; height: 22px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     .tab-count { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--red); color: white; font-size: 14px; }
     h1 { margin: 0 0 8px; font-size: 24px; letter-spacing: -.4px; }
     .result-subtitle { margin: 0 0 24px; color: var(--muted); font-size: 19px; font-weight: 650; }
@@ -138,9 +141,19 @@
     .booking-form { display: grid; gap: 16px; }
     .booking-summary { margin-bottom: 22px; padding: 15px; border-radius: 10px; background: #f4f6f9; line-height: 1.7; }
     .booking-note { color: var(--muted); font-size: 13px; line-height: 1.55; }
-    .site-footer { padding: 28px 24px; background: var(--navy-dark); color: #dbe2ee; text-align: center; }
+    .site-footer { padding: 34px 24px; background: var(--navy-dark); color: #dbe2ee; }
     .site-footer p { margin: 5px 0; }
     .site-footer a { color: white; }
+    .footer-content { width: min(1200px, 100%); margin: 0 auto; }
+    .footer-heading { margin: 0 0 8px; color: white; font-size: 20px; }
+    .footer-intro { margin: 0 0 24px; color: #c4cddd; line-height: 1.6; }
+    .footer-details { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(300px, 1.2fr); gap: 24px; align-items: stretch; }
+    .footer-location { padding: 22px; border: 1px solid #7182a1; border-radius: 12px; background: #20375e; }
+    .footer-location h3 { margin: 0 0 12px; color: white; font-size: 17px; }
+    .footer-location p { margin: 9px 0; line-height: 1.6; }
+    .footer-location a { text-underline-offset: 3px; }
+    .footer-map { display: block; width: 100%; min-height: 260px; border: 0; border-radius: 12px; background: #e5e8ee; }
+    .footer-legal { margin-top: 24px !important; padding-top: 18px; border-top: 1px solid #ffffff30; text-align: center; }
     .empty-state { padding: 30px; border: 1px solid var(--line); border-radius: 14px; background: white; color: var(--muted); text-align: center; }
     .notice-strip { padding: 10px 20px; background: #111d35; color: #f7f8fa; text-align: center; font-size: 14px; font-weight: 650; }
     .home-hero {
@@ -206,6 +219,7 @@
       .phone-pill { gap: 7px; padding: 8px 9px; font-size: 11px; }
       .menu-button { width: 34px; }
       .route-banner { padding: 16px 20px 18px; }
+      .route-banner.search-route-banner { padding-bottom: 18px; }
       .route-title { margin-top: 17px; font-size: 21px; }
       main { padding: 18px 16px 36px; }
       .class-tabs { gap: 8px; margin-bottom: 12px; }
@@ -258,6 +272,8 @@
       .popular-route-info h3 { font-size: 16px; }
       .popular-route-details { display: grid; gap: 4px; margin: 9px 0 12px; }
       .chat-float { right: 13px; bottom: 13px; padding: 11px 15px; font-size: 14px; }
+      .footer-details { grid-template-columns: 1fr; gap: 16px; }
+      .footer-map { min-height: 230px; }
     }
     @media (max-width: 420px) {
       .phone-pill { padding: 9px 10px; font-size: 12px; }
@@ -278,26 +294,46 @@
   <header class="site-header">
     <a class="brand" href="?home=1" aria-label="Simba Coach home"><img src="./simba-logo.webp" alt="Simba Coach Ltd"></a>
     <div class="header-actions">
-      <a class="phone-pill" href="tel:+254105686866" aria-label="Call Simba Coach">
-        <span aria-hidden="true">☎</span><span>+254 105 686 866</span>
+      <a class="phone-pill" href="tel:+254733366401" aria-label="Call Simba Coach">
+        <span aria-hidden="true">☎</span><span>0733 366 401</span>
       </a>
       <button class="menu-button" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
     </div>
     <nav class="menu-panel" id="menu-panel" aria-label="Main menu">
       <a href="?home=1">Search buses</a>
       <a href="mailto:infosimbacoachbus@gmail.com">infosimbacoachbus@gmail.com</a>
-      <a href="tel:+254105686866">Call +254 105 686 866</a>
+      <a href="tel:+254733366401">Call 0733 366 401</a>
     </nav>
   </header>
   <div class="notice-strip">Comfortable journeys across Kenya &amp; East Africa · Plan your trip online · Book via WhatsApp</div>
   <div id="app"></div>
-  <a class="chat-float" href="https://wa.me/254105686866" target="_blank" rel="noopener noreferrer" aria-label="Chat with Simba Coach on WhatsApp">◉ &nbsp; Chat Us</a>
+  <a class="chat-float" href="https://wa.me/254733366401" target="_blank" rel="noopener noreferrer" aria-label="Chat with Simba Coach on WhatsApp">◉ &nbsp; Chat Us</a>
   <footer class="site-footer">
-    <p>Simba Coach — The Pride of Travellers</p>
-    <p><a href="tel:+254105686866">+254 105 686 866</a> · <a href="mailto:infosimbacoachbus@gmail.com">infosimbacoachbus@gmail.com</a></p>
+    <div class="footer-content">
+      <h2 class="footer-heading">Simba Coach — The Pride of Travellers</h2>
+      <p class="footer-intro">Plan your journey across Kenya and East Africa. Contact Simba Coach for booking enquiries and travel information.</p>
+      <div class="footer-details">
+        <section class="footer-location" aria-labelledby="location-heading">
+          <h3 id="location-heading">Our Nairobi location</h3>
+          <p><strong>Address:</strong> Kumasi Rd, Nairobi, Kenya</p>
+          <p><strong>Phone &amp; WhatsApp:</strong> <a href="tel:+254733366401">0733 366 401</a></p>
+          <p><strong>Email:</strong> <a href="mailto:infosimbacoachbus@gmail.com">infosimbacoachbus@gmail.com</a></p>
+          <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Kumasi%20Rd%2C%20Nairobi%2C%20Kenya" target="_blank" rel="noopener noreferrer">Open Kumasi Road in Google Maps</a></p>
+        </section>
+        <iframe
+          class="footer-map"
+          title="Map showing Kumasi Road, Nairobi, Kenya"
+          src="https://www.google.com/maps?q=Kumasi%20Rd%2C%20Nairobi%2C%20Kenya&amp;output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <p class="footer-legal">Route schedules and seat availability can change; please confirm details with the operator before travelling.</p>
+    </div>
   </footer>
   <script>
-    const contactNumber = "254105686866";
+    const contactNumber = "254733366401";
     const contactEmail = "infosimbacoachbus@gmail.com";
     const destinations = [
       ["Baringo", "Kabarnet", 0.48, 35.74], ["Bomet", "Bomet", -0.78, 35.34],
@@ -440,9 +476,7 @@
           ? referenceRange[1] + 300
           : Math.max(100, Math.round(baseEstimate * 1.35 / 50) * 50));
         const price = option.tier === "standard" ? standardFare : option.tier === "executive" ? executiveFare : vipFare;
-        const availableSeats = new Set([9, 11, 14, 15]);
-        const taken = Array.from({ length: Math.floor(option.seats * 0.22) }, (_, i) => ((index * 3 + i * 5) % option.seats) + 1)
-          .filter(seat => seat <= option.seats && !availableSeats.has(seat));
+        const taken = [1, 3, 7, 9, 10, 11, 14, 15, 18, 20].filter(seat => seat <= option.seats);
         return {
           ...option, id: `${idBase}-${index + 1}`, price, left: option.seats - taken.length, taken,
           hours: Math.max(1, Math.round(roadKm / 55)),
@@ -614,17 +648,29 @@
 
     function renderSearch() {
       const vehicles = allVehicles(state.from, state.to);
-      const counts = { "All Classes": vehicles.length, VIP: 1, Executive: 1, Standard: 2 };
-      const visibleBuses = state.filter === "All Classes" ? vehicles : vehicles.filter(vehicle => vehicle.className === state.filter);
+      const classIcon = name => ({
+        VIP: '<svg class="tab-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m2 8 5 4 5-8 5 8 5-4-2 12H4L2 8Z"/><path d="M4 16h16"/></svg>',
+        Executive: '<svg class="tab-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4-5.7-3-5.7 3 1.1-6.4-4.6-4.5 6.4-.9L12 2.8Z"/></svg>',
+        Standard: '<svg class="tab-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>'
+      })[name] || "";
+      const counts = {
+        "All Classes": vehicles.length,
+        VIP: vehicles.filter(vehicle => vehicle.className === "VIP").length,
+        Executive: vehicles.filter(vehicle => vehicle.className === "Executive").length,
+        Standard: vehicles.filter(vehicle => vehicle.className === "Standard").length
+      };
+      const visibleBuses = state.filter === "All Classes"
+        ? vehicles
+        : vehicles.filter(vehicle => vehicle.className === state.filter);
       app.innerHTML = `
-        <section class="route-banner">
+        <section class="route-banner search-route-banner">
           <button class="back-button" data-action="back" type="button"><span aria-hidden="true">←</span>Back</button>
-          <h1 class="route-title"><span aria-hidden="true">⌖</span>${escapeHtml(state.from)} <span aria-hidden="true">→</span> ${escapeHtml(state.to)}</h1>
+          <h1 class="route-title"><svg aria-hidden="true" viewBox="0 0 24 28" fill="none"><path d="M12 26s9-9.2 9-16A9 9 0 1 0 3 10c0 6.8 9 16 9 16Z" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2.2"/></svg>${escapeHtml(state.from)} <span aria-hidden="true">→</span> ${escapeHtml(state.to)}</h1>
           <p class="route-date">${dateLabel(state.date)}</p>
         </section>
         <main>
           <nav class="class-tabs" aria-label="Filter bus class">
-            ${Object.entries(counts).map(([name,count]) => `<button type="button" class="class-tab ${state.filter === name ? "active" : ""}" data-filter="${name}">${name === "Standard" ? "▰ " : name === "Executive" ? "◆ " : name === "VIP" ? "♛ " : ""}${name}<span class="tab-count">${count}</span></button>`).join("")}
+            ${Object.entries(counts).map(([name,count]) => `<button type="button" class="class-tab ${state.filter === name ? "active" : ""}" data-filter="${name}">${classIcon(name)}${name}<span class="tab-count">${count}</span></button>`).join("")}
           </nav>
           <h1>${escapeHtml(routeTitle())} Bus Tickets</h1>
           <p class="result-subtitle">${visibleBuses.length} buses available · ${dateLabel(state.date)}</p>
@@ -752,6 +798,7 @@
     }
     function render() {
       const step = stepFromLocation();
+      document.querySelector(".notice-strip").hidden = step === "search";
       if (step === "seats") renderSeats();
       else if (step === "booking") renderBooking();
       else if (step === "home") renderHome();
