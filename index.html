@@ -170,11 +170,14 @@
     .search-wrap { position: relative; z-index: 2; width: min(1200px, calc(100% - 48px)); margin: -36px auto 0; }
     .search-panel { padding: 22px; border: 1px solid #e2e5eb; border-radius: 18px; background: white; box-shadow: 0 18px 45px #15234324; }
     .trip-type { display: flex; gap: 8px; margin: 0 0 18px; }
-    .trip-type span { padding: 8px 16px; border-radius: 24px; background: #edf1f7; color: var(--navy); font-size: 13px; font-weight: 800; text-transform: uppercase; }
-    .search-form { grid-template-columns: 1fr 1fr 1fr 125px 155px; margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
+    .trip-type button { padding: 8px 16px; border: 1px solid #d9dce2; border-radius: 24px; background: white; color: var(--navy); font-size: 13px; font-weight: 800; text-transform: uppercase; }
+    .trip-type button.active { border-color: var(--navy); background: var(--navy); color: white; }
+    .search-form { grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(120px, .8fr) 155px minmax(145px, 1fr); margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
     .search-form .field label { text-transform: uppercase; letter-spacing: .06em; }
     .search-form .primary-button { background: #5e7d24; }
     .search-form .primary-button:hover { background: #4c671c; }
+    .search-form [hidden] { display: none; }
+    .return-date-note { margin: 12px 0 0; color: var(--muted); font-size: 12px; }
     .home-main { width: min(1200px, 100%); margin: 0 auto; padding: 42px 24px 60px; }
     .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0 auto 42px; border: 1px solid var(--line); border-radius: 14px; background: white; }
     .stat-item { padding: 22px 16px; text-align: center; }
@@ -453,6 +456,19 @@
     }
     const photoUrl = index => `./${encodeURI(randomPhotos[index % randomPhotos.length])}`;
     let popularRouteFilter = "All";
+    const availableSeatsByBus = new Map();
+    const getAvailableSeats = (busId, seatCount) => {
+      if (!availableSeatsByBus.has(busId)) {
+        const count = Math.floor(Math.random() * 15) + 2;
+        const seats = Array.from({ length: seatCount }, (_, seat) => seat + 1);
+        for (let index = seats.length - 1; index > 0; index--) {
+          const swapIndex = Math.floor(Math.random() * (index + 1));
+          [seats[index], seats[swapIndex]] = [seats[swapIndex], seats[index]];
+        }
+        availableSeatsByBus.set(busId, seats.slice(0, Math.min(count, seatCount)));
+      }
+      return availableSeatsByBus.get(busId);
+    };
     const allVehicles = (from, to) => {
       const fromPoint = destinations.find(item => item[1] === from) || destinations.find(item => item[0] === from) || destinations[29];
       const knownDestination = destinations.find(item => item[1] === to) || destinations.find(item => item[0] === to);
@@ -476,11 +492,12 @@
           ? referenceRange[1] + 300
           : Math.max(100, Math.round(baseEstimate * 1.35 / 50) * 50));
         const price = option.tier === "standard" ? standardFare : option.tier === "executive" ? executiveFare : vipFare;
-        const availableSeats = new Set([6, 8, 21]);
+        const id = `${idBase}-${index + 1}`;
+        const availableSeats = new Set(getAvailableSeats(id, option.seats));
         const taken = Array.from({ length: option.seats }, (_, seat) => seat + 1)
           .filter(seat => !availableSeats.has(seat));
         return {
-          ...option, id: `${idBase}-${index + 1}`, price, left: option.seats - taken.length, taken,
+          ...option, id, price, left: availableSeats.size, taken,
           hours: Math.max(1, Math.round(roadKm / 55)),
           duration: fromPoint[1] === "Nairobi"
             ? referenceDurations[endPoint[1]]
@@ -505,6 +522,7 @@
       from: initialFrom,
       to: initialTo,
       date: params.get("date") || "2026-10-22",
+      returnDate: params.get("returnDate") || "",
       pax: Math.max(1, Number(params.get("pax") || 1)),
       filter: "All Classes",
       selectedSeats: (params.get("seats") || "").split(",").filter(Boolean).map(Number),
@@ -523,9 +541,18 @@
       return new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "2-digit", month: "short", year: "numeric" })
         .format(new Date(year, month - 1, day));
     };
-    const routeQuery = () => new URLSearchParams({
-      from: state.from, to: state.to, date: state.date, pax: String(state.pax)
-    });
+    const nextDate = value => {
+      const [year, month, day] = value.split("-").map(Number);
+      const date = new Date(year, month - 1, day + 1);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    };
+    const routeQuery = () => {
+      const query = new URLSearchParams({
+        from: state.from, to: state.to, date: state.date, pax: String(state.pax)
+      });
+      if (state.returnDate) query.set("returnDate", state.returnDate);
+      return query;
+    };
     const routeTitle = () => `${state.from} to ${state.to}`;
     const routeUrl = (step, extra = {}) => {
       const query = routeQuery();
@@ -576,14 +603,19 @@
         </section>
         <div class="search-wrap">
           <section class="search-panel" aria-label="Find a bus">
-            <div class="trip-type"><span>One way</span></div>
+            <div class="trip-type" role="group" aria-label="Trip type">
+              <button type="button" class="${state.returnDate ? "" : "active"}" data-trip-type="one-way" aria-pressed="${!state.returnDate}">One Way</button>
+              <button type="button" class="${state.returnDate ? "active" : ""}" data-trip-type="return" aria-pressed="${Boolean(state.returnDate)}">Return</button>
+            </div>
           <form class="search-form" id="search-form">
             <div class="field"><label for="from">From</label><select id="from" name="from" required>${routeOptions(state.from)}</select></div>
             <div class="field"><label for="to">To</label><select id="to" name="to" required>${routeOptions(state.to)}</select></div>
             <div class="field"><label for="date">Travel date</label><input id="date" name="date" type="date" value="${escapeHtml(state.date)}" required></div>
+            <div class="field" id="return-date-field" ${state.returnDate ? "" : "hidden"}><label for="return-date">Return date</label><input id="return-date" name="returnDate" type="date" value="${escapeHtml(state.returnDate)}" min="${escapeHtml(state.date)}" ${state.returnDate ? "required" : ""}></div>
             <div class="field"><label for="pax">Passengers</label><select id="pax" name="pax">${[1,2,3,4,5,6].map(n => `<option value="${n}" ${n === state.pax ? "selected" : ""}>${n}</option>`).join("")}</select></div>
             <button class="primary-button" type="submit">Search buses</button>
           </form>
+          ${state.returnDate ? `<p class="return-date-note">Return journey date: ${dateLabel(state.returnDate)}</p>` : ""}
           </section>
         </div>
         <main class="home-main">
@@ -635,9 +667,23 @@
         state.from = String(form.get("from")).trim();
         state.to = String(form.get("to")).trim();
         state.date = String(form.get("date"));
+        state.returnDate = String(form.get("returnDate") || "");
         state.pax = Number(form.get("pax"));
         state.filter = "All Classes";
         pushRoute("search");
+      });
+      document.querySelectorAll("[data-trip-type]").forEach(button => button.addEventListener("click", () => {
+        state.returnDate = button.dataset.tripType === "return"
+          ? state.returnDate || nextDate(state.date)
+          : "";
+        renderHome();
+      }));
+      document.querySelector("#date").addEventListener("change", event => {
+        const returnDate = document.querySelector("#return-date");
+        returnDate.min = event.currentTarget.value;
+        if (returnDate.value && returnDate.value < event.currentTarget.value) {
+          returnDate.value = nextDate(event.currentTarget.value);
+        }
       });
       document.querySelectorAll("[data-top-from], [data-popular-from]").forEach(button => button.addEventListener("click", () => {
         searchRoute(button.dataset.topFrom || button.dataset.popularFrom, button.dataset.topTo || button.dataset.popularTo);
@@ -675,7 +721,7 @@
             ${Object.entries(counts).map(([name,count]) => `<button type="button" class="class-tab ${state.filter === name ? "active" : ""}" data-filter="${name}">${classIcon(name)}${name}<span class="tab-count">${count}</span></button>`).join("")}
           </nav>
           <h1>${escapeHtml(routeTitle())} Bus Tickets</h1>
-          <p class="result-subtitle">${visibleBuses.length} buses available · ${dateLabel(state.date)}</p>
+          <p class="result-subtitle">${visibleBuses.length} buses available · ${dateLabel(state.date)}${state.returnDate ? ` · Return ${dateLabel(state.returnDate)}` : ""}</p>
           <p class="fare-note">Listed routes use the displayed route fares; other connections show estimates. Confirm the fare, schedule, and seat availability with Simba Coach on WhatsApp before travelling.</p>
           <section class="bus-list" aria-label="Available buses">
             ${visibleBuses.length ? visibleBuses.map(bus => `
@@ -711,7 +757,7 @@
       const bus = state.bookingBus;
       const total = state.selectedSeats.length * bus.price;
       app.innerHTML = `
-        ${routeBanner("Select Your Seat", `${state.from} → ${state.to} · ${bus.mode}${bus.className !== bus.mode ? ` · ${bus.className}` : ""} · ${bus.time}`)}
+        ${routeBanner("Select Your Seat", `${state.from} → ${state.to} · ${bus.mode}${bus.className !== bus.mode ? ` · ${bus.className}` : ""} · ${bus.time}${state.returnDate ? ` · Return ${dateLabel(state.returnDate)}` : ""}`)}
         <main class="seat-main">
           <p class="seat-instructions">Pick as many seats as you need (${state.selectedSeats.length} selected)</p>
           <div class="legend" aria-label="Seat legend">
@@ -756,14 +802,14 @@
       const bus = state.bookingBus;
       const total = state.selectedSeats.length * bus.price;
       app.innerHTML = `
-        ${routeBanner("Passenger Details", `${state.from} → ${state.to} · ${bus.mode}${bus.className !== bus.mode ? ` · ${bus.className}` : ""} · ${bus.time}`)}
+        ${routeBanner("Passenger Details", `${state.from} → ${state.to} · ${bus.mode}${bus.className !== bus.mode ? ` · ${bus.className}` : ""} · ${bus.time}${state.returnDate ? ` · Return ${dateLabel(state.returnDate)}` : ""}`)}
         <main>
           <section class="booking-card">
             <h2>Complete your booking</h2>
             <p>Enter the lead passenger’s details. We’ll open WhatsApp with your trip request ready to send.</p>
             <div class="booking-summary">
               <strong>${escapeHtml(routeTitle())}</strong><br>
-              ${dateLabel(state.date)} · ${bus.time} · ${bus.mode}${bus.className !== bus.mode ? ` · ${bus.className}` : ""}<br>
+              ${dateLabel(state.date)}${state.returnDate ? ` · Return ${dateLabel(state.returnDate)}` : ""} · ${bus.time} · ${bus.mode}${bus.className !== bus.mode ? ` · ${bus.className}` : ""}<br>
               Seat${state.selectedSeats.length === 1 ? "" : "s"} ${state.selectedSeats.join(", ")} · KES ${total.toLocaleString("en-KE")}
             </div>
             <form class="booking-form" id="booking-form">
@@ -785,6 +831,7 @@
           `Phone: ${passengerPhone}`,
           `Route: ${state.from} to ${state.to}`,
           `Travel date: ${dateLabel(state.date)}`,
+          ...(state.returnDate ? [`Return date: ${dateLabel(state.returnDate)}`] : []),
           `Vehicle: ${bus.mode}${bus.className !== bus.mode ? ` (${bus.className})` : ""}, ${bus.time}`,
           `Seat${state.selectedSeats.length === 1 ? "" : "s"}: ${state.selectedSeats.join(", ")}`,
           `Total: KES ${total.toLocaleString("en-KE")}`
