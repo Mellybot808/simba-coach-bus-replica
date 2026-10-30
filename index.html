@@ -156,6 +156,8 @@
     .footer-legal { margin-top: 24px !important; padding-top: 18px; border-top: 1px solid #ffffff30; text-align: center; }
     .empty-state { padding: 30px; border: 1px solid var(--line); border-radius: 14px; background: white; color: var(--muted); text-align: center; }
     .notice-strip { padding: 10px 20px; background: #111d35; color: #f7f8fa; text-align: center; font-size: 14px; font-weight: 650; }
+    .notice-strip time { margin-left: 8px; color: #dce7a8; font-variant-numeric: tabular-nums; }
+    .notice-strip.clock-only .notice-message { display: none; }
     .home-hero {
       position: relative; min-height: 510px; display: grid; align-items: center; padding: 48px max(24px, calc((100vw - 1200px) / 2));
       background-color: var(--navy-dark); background-position: center 44%; background-size: cover; color: white;
@@ -308,7 +310,7 @@
       <a href="tel:+254105686866">Call +254 105 686 866</a>
     </nav>
   </header>
-  <div class="notice-strip">Comfortable journeys across Kenya &amp; East Africa · Plan your trip online · Book via WhatsApp</div>
+  <div class="notice-strip"><span class="notice-message">Comfortable journeys across Kenya &amp; East Africa · Plan your trip online · Book via WhatsApp · </span>Nairobi time: <time id="nairobi-clock" aria-label="Current date and time in Nairobi"></time></div>
   <div id="app"></div>
   <a class="chat-float" href="https://wa.me/254105686866" target="_blank" rel="noopener noreferrer" aria-label="Chat with Simba Coach on WhatsApp">◉ &nbsp; Chat Us</a>
   <footer class="site-footer">
@@ -516,13 +518,36 @@
     const params = new URLSearchParams(location.search);
     const currentParams = () => new URLSearchParams(location.search);
     const app = document.querySelector("#app");
+    const nairobiDateFormatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Africa/Nairobi", year: "numeric", month: "2-digit", day: "2-digit"
+    });
+    const nairobiClockFormatter = new Intl.DateTimeFormat("en-KE", {
+      timeZone: "Africa/Nairobi", weekday: "long", day: "2-digit", month: "short",
+      year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hour12: true, timeZoneName: "short"
+    });
+    const currentDateInNairobi = () => {
+      const parts = nairobiDateFormatter.formatToParts(new Date());
+      const part = type => parts.find(item => item.type === type).value;
+      return `${part("year")}-${part("month")}-${part("day")}`;
+    };
+    const isValidDateKey = value => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+      const [year, month, day] = value.split("-").map(Number);
+      const date = new Date(Date.UTC(year, month - 1, day));
+      return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+    };
+    let currentDate = currentDateInNairobi();
     const initialFrom = params.get("from") || "Nairobi";
     const initialTo = params.get("to") || "Mombasa";
+    const requestedDate = params.get("date") || "";
+    const initialDate = isValidDateKey(requestedDate) && requestedDate >= currentDate ? requestedDate : currentDate;
+    const requestedReturnDate = params.get("returnDate") || "";
     const state = {
       from: initialFrom,
       to: initialTo,
-      date: params.get("date") || "2026-10-22",
-      returnDate: params.get("returnDate") || "",
+      date: initialDate,
+      returnDate: isValidDateKey(requestedReturnDate) && requestedReturnDate >= initialDate ? requestedReturnDate : "",
       pax: Math.max(1, Number(params.get("pax") || 1)),
       filter: "All Classes",
       selectedSeats: (params.get("seats") || "").split(",").filter(Boolean).map(Number),
@@ -610,7 +635,7 @@
           <form class="search-form" id="search-form">
             <div class="field"><label for="from">From</label><select id="from" name="from" required>${routeOptions(state.from)}</select></div>
             <div class="field"><label for="to">To</label><select id="to" name="to" required>${routeOptions(state.to)}</select></div>
-            <div class="field"><label for="date">Travel date</label><input id="date" name="date" type="date" value="${escapeHtml(state.date)}" required></div>
+            <div class="field"><label for="date">Travel date</label><input id="date" name="date" type="date" value="${escapeHtml(state.date)}" min="${currentDate}" required></div>
             <div class="field" id="return-date-field" ${state.returnDate ? "" : "hidden"}><label for="return-date">Return date</label><input id="return-date" name="returnDate" type="date" value="${escapeHtml(state.returnDate)}" min="${escapeHtml(state.date)}" ${state.returnDate ? "required" : ""}></div>
             <div class="field"><label for="pax">Passengers</label><select id="pax" name="pax">${[1,2,3,4,5,6].map(n => `<option value="${n}" ${n === state.pax ? "selected" : ""}>${n}</option>`).join("")}</select></div>
             <button class="primary-button" type="submit">Search buses</button>
@@ -847,7 +872,7 @@
     }
     function render() {
       const step = stepFromLocation();
-      document.querySelector(".notice-strip").hidden = step === "search";
+      document.querySelector(".notice-strip").classList.toggle("clock-only", step === "search");
       if (step === "seats") renderSeats();
       else if (step === "booking") renderBooking();
       else if (step === "home") renderHome();
@@ -866,6 +891,21 @@
       else pushRoute("home");
     });
     window.addEventListener("popstate", render);
+    const updateCurrentDateTime = () => {
+      const now = new Date();
+      const clock = document.querySelector("#nairobi-clock");
+      clock.textContent = nairobiClockFormatter.format(now);
+      clock.dateTime = now.toISOString();
+      const today = currentDateInNairobi();
+      if (today !== currentDate) {
+        currentDate = today;
+        if (state.date < currentDate) state.date = currentDate;
+        if (state.returnDate && state.returnDate < state.date) state.returnDate = state.date;
+        if (["home", "search"].includes(stepFromLocation())) render();
+      }
+    };
+    updateCurrentDateTime();
+    window.setInterval(updateCurrentDateTime, 1000);
     render();
   </script>
 </body>
