@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#1c3157">
-  <meta name="description" content="Simba Coach is temporarily carrying out website maintenance. Contact our team by phone, WhatsApp, or email.">
-  <title>Temporarily Unavailable | Simba Coach</title>
+  <meta name="description" content="Book Simba Coach bus tickets across Kenya and East Africa.">
+  <title>Simba Coach Bus Tickets Online | Kenya &amp; East Africa</title>
   <style>
     :root {
       color-scheme: light;
@@ -24,33 +24,6 @@
     }
     * { box-sizing: border-box; }
     body { margin: 0; color: var(--text); background: white; }
-    body.maintenance-mode { min-height: 100vh; background: #f7f8fa; }
-    #website-content[hidden] { display: none; }
-    .maintenance-screen {
-      min-height: 100vh; display: grid; place-items: center; padding: 28px;
-      background: radial-gradient(ellipse at 50% 20%, #fff 0%, #f7f8fa 70%);
-    }
-    .maintenance-card {
-      width: min(100%, 620px); padding: clamp(30px, 7vw, 64px);
-      border: 1px solid var(--line); border-radius: 16px; background: #fff;
-      text-align: center; box-shadow: 0 20px 60px #172a4d14;
-    }
-    .maintenance-mark {
-      width: 52px; height: 52px; display: grid; place-items: center; margin: 0 auto 24px;
-      border: 1px solid #e8bfc1; border-radius: 50%; color: var(--red); font-size: 24px;
-    }
-    .maintenance-label { margin: 0 0 14px; color: var(--red); font-size: 11px; font-weight: 750; letter-spacing: .18em; text-transform: uppercase; }
-    .maintenance-card h1 { margin: 0; color: var(--navy); font-size: clamp(34px, 7vw, 52px); font-weight: 760; letter-spacing: -.06em; line-height: 1.08; }
-    .maintenance-copy { margin: 18px 0 30px; color: var(--muted); font-size: 16px; line-height: 1.7; }
-    .maintenance-contact { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-    .maintenance-contact a { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; padding: 12px 18px; border: 1px solid var(--line); border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none; }
-    .maintenance-contact a:first-child { border-color: var(--navy); background: var(--navy); color: #fff; }
-    .maintenance-contact a:hover { border-color: var(--red); }
-    .maintenance-email { display: inline-block; margin-top: 24px; color: var(--muted); font-size: 13px; text-underline-offset: 3px; }
-    @media (max-width: 480px) {
-      .maintenance-screen { padding: 18px; }
-      .maintenance-contact { display: grid; }
-    }
     button, input, select { font: inherit; }
     button { cursor: pointer; }
     a { color: inherit; }
@@ -322,8 +295,7 @@
     }
   </style>
 </head>
-<body class="maintenance-mode">
-  <div id="website-content" hidden inert aria-hidden="true">
+<body>
   <header class="site-header">
     <a class="brand" href="?home=1" aria-label="Simba Coach home"><img src="./simba-logo.webp" alt="Simba Coach Ltd"></a>
     <div class="header-actions">
@@ -365,20 +337,6 @@
       <p class="footer-legal">Route schedules and seat availability can change; please confirm details with the operator before travelling.</p>
     </div>
   </footer>
-  </div>
-  <main class="maintenance-screen">
-    <section class="maintenance-card" aria-labelledby="maintenance-title">
-      <div class="maintenance-mark" aria-hidden="true">!</div>
-      <p class="maintenance-label">Simba Coach</p>
-      <h1 id="maintenance-title">We’ll be back soon.</h1>
-      <p class="maintenance-copy">Our website is temporarily unavailable while we carry out maintenance. Our team is still here to help with your travel enquiries and bookings.</p>
-      <nav class="maintenance-contact" aria-label="Contact Simba Coach">
-        <a href="https://wa.me/254105686866">Chat on WhatsApp</a>
-        <a href="tel:+254105686866">Call +254 105 686 866</a>
-      </nav>
-      <a class="maintenance-email" href="mailto:infosimbacoachbus@gmail.com">infosimbacoachbus@gmail.com</a>
-    </section>
-  </main>
   <script>
     const contactNumber = "254105686866";
     const contactEmail = "infosimbacoachbus@gmail.com";
